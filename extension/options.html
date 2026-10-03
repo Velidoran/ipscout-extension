@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ipScout settings</title>
+    <link rel="icon" href="icons/icon32.png" />
+    <link rel="stylesheet" href="ui/styles.css" />
+  </head>
+  <body class="options">
+    <header class="app-header" style="padding: 10px 24px">
+      <span class="brand"><img src="icons/icon32.png" alt="" /> ipScout <small>Settings</small></span>
+      <div class="header-actions">
+        <a class="btn btn-sm" href="results.html" data-icon="search" data-icon-size="13">Open ipScout</a>
+      </div>
+    </header>
+
+    <main>
+      <div id="welcome" class="welcome" hidden>
+        <strong>Thanks for installing ipScout!</strong>
+        <span id="welcome-text"></span>
+      </div>
+
+      <h1 style="margin-top: 20px">Sources</h1>
+      <p class="lede" id="sources-lede"></p>
+      <div id="providers" class="provider-list"></div>
+
+      <h2>Behavior</h2>
+      <div class="settings-grid">
+        <label class="setting">
+          <span class="label">Cache results <small>Reusing recent results saves free-tier quota. Use Refresh to bypass.</small></span>
+          <select id="cacheTtlMinutes">
+            <option value="0">Don’t cache</option>
+            <option value="15">15 minutes</option>
+            <option value="60">1 hour</option>
+            <option value="360">6 hours</option>
+            <option value="1440">24 hours</option>
+            <option value="10080">7 days</option>
+          </select>
+        </label>
+        <label class="setting">
+          <span class="label">AbuseIPDB report window <small>How far back abuse reports are counted.</small></span>
+          <select id="abuseipdbMaxAgeDays">
+            <option value="7">7 days</option>
+            <option value="30">30 days</option>
+            <option value="90">90 days</option>
+            <option value="180">180 days</option>
+            <option value="365">365 days</option>
+          </select>
+        </label>
+        <div class="setting">
+          <span class="label"
+            >Fetch recent AbuseIPDB reports
+            <small>Shows report categories and comments. Uses the separate “reports” quota (100/day on the free plan).</small></span
+          >
+          <label class="switch"
+            ><input type="checkbox" id="abuseipdbFetchReports" /><span class="track"></span
+            ><span class="visually-hidden">Fetch recent AbuseIPDB reports</span></label
+          >
+        </div>
+        <div class="setting">
+          <span class="label"
+            >Look up selected IP when opening the popup
+            <small>If you’ve highlighted an IP on the page, the popup checks it right away.</small></span
+          >
+          <label class="switch"
+            ><input type="checkbox" id="autoLookupSelection" /><span class="track"></span
+            ><span class="visually-hidden">Look up selected IP automatically</span></label
+          >
+        </div>
+        <div class="setting">
+          <span class="label"
+            >List IPs found on the current page
+            <small>Read locally when you open the popup; page text never leaves your browser.</small></span
+          >
+          <label class="switch"
+            ><input type="checkbox" id="scanPage" /><span class="track"></span
+            ><span class="visually-hidden">List IPs found on the current page</span></label
+          >
+        </div>
+        <div class="setting">
+          <span class="label"
+            >Defang IPs when copying a summary <small>Writes 1[.]2[.]3[.]4 and hxxps:// so pasted reports aren’t clickable.</small></span
+          >
+          <label class="switch"
+            ><input type="checkbox" id="defangOnCopy" /><span class="track"></span
+            ><span class="visually-hidden">Defang IPs when copying</span></label
+          >
+        </div>
+      </div>
+
+      <h2>Data</h2>
+      <div class="data-actions">
+        <button id="clear-cache" class="btn btn-sm" type="button">Clear cached results</button>
+        <button id="clear-history" class="btn btn-sm" type="button">Clear lookup history</button>
+        <span id="data-status" class="status" role="status"></span>
+      </div>
+
+      <h2>Privacy</h2>
+      <ul class="privacy">
+        <li>ipScout has no server of its own. Lookups go directly from your browser to each source you enable.</li>
+        <li>Only the IP address (or hostname) you look up is sent. Page text that ipScout reads to find IPs stays on your device.</li>
+        <li>API keys are kept in this browser’s extension storage and are sent only to the service they belong to.</li>
+        <li>Requests never include your cookies for these sites, so lookups aren’t tied to your logged-in accounts.</li>
+      </ul>
+    </main>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <script type="module" src="ui/options.js"></script>
+  </body>
+</html>

@@ -1,0 +1,61 @@
+{
+  "manifest_version": 3,
+  "name": "ipScout – IP Address Research",
+  "short_name": "ipScout",
+  "version": "1.0.0",
+  "description": "Research any IP in one click: abuse reports, threat intel, open ports, geolocation, WHOIS, reverse DNS and Tor/VPN checks.",
+  "minimum_chrome_version": "116",
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "action": {
+    "default_title": "ipScout – research an IP",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png"
+    }
+  },
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
+  },
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "omnibox": {
+    "keyword": "ip"
+  },
+  "commands": {
+    "_execute_action": {
+      "suggested_key": {
+        "default": "Alt+Shift+S"
+      },
+      "description": "Open ipScout"
+    }
+  },
+  "permissions": ["storage", "contextMenus", "activeTab", "scripting"],
+  "host_permissions": [
+    "https://api.abuseipdb.com/*",
+    "https://www.virustotal.com/*",
+    "https://api.greynoise.io/*",
+    "https://otx.alienvault.com/*",
+    "https://threatfox-api.abuse.ch/*",
+    "https://internetdb.shodan.io/*",
+    "https://ipinfo.io/*",
+    "https://api.ipapi.is/*",
+    "https://rdap.org/*",
+    "https://rdap.arin.net/*",
+    "https://rdap.db.ripe.net/*",
+    "https://rdap.apnic.net/*",
+    "https://rdap.lacnic.net/*",
+    "https://rdap.afrinic.net/*",
+    "https://dns.google/*",
+    "https://cloudflare-dns.com/*",
+    "https://onionoo.torproject.org/*"
+  ]
+}
