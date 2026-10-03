@@ -96,7 +96,8 @@ ipScout has no server. Lookups go straight from your browser to each source you 
 | `activeTab` + `scripting`      | When you open the popup, read the current page's selection (and visible text, to list IPs on the page). This happens only when you click the icon, and the text never leaves your browser. |
 | Host access to the API domains | Calling the sources listed above. No access to the sites you browse.                                                                                                                       |
 
-- API keys are stored in `chrome.storage.local` and sent only to the service they belong to, in request headers where the API allows it.
+- API keys are stored in `chrome.storage.local` and sent only to the service they belong to, in request headers where the API allows it (ipapi.is only accepts its key in the URL).
+- That storage is restricted to ipScout's own pages, so scripts running on websites, including the popup's page scan, can't read your keys. Chrome doesn't encrypt extension storage on disk, so anyone with access to your browser profile folder could still read them; you can revoke and regenerate a key on its site at any time.
 - Requests never include your cookies for these sites, so lookups aren't tied to your logged-in accounts there.
 - You can switch off page scanning, auto-lookup and any individual source in Settings, and clear the cache and history at any time.
 

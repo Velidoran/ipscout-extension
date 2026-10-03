@@ -24,6 +24,22 @@ function defaultArea() {
   return area;
 }
 
+/**
+ * Limit storage (which holds the API keys) to ipScout's own pages and service
+ * worker. By default Chrome also lets content scripts read chrome.storage.local,
+ * including the page-scan script the popup injects into websites. Resolves to
+ * false where the browser doesn't support restricting the local area.
+ */
+export async function restrictStorageToExtension(area = defaultArea()) {
+  if (typeof area.setAccessLevel !== 'function') return false;
+  try {
+    await area.setAccessLevel({ accessLevel: 'TRUSTED_CONTEXTS' });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 export function normalizeSettings(saved) {
   const s = saved && typeof saved === 'object' ? saved : {};
   return {

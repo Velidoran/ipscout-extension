@@ -10,6 +10,7 @@ import {
   isProviderEnabled,
   normalizeSettings,
   recordHistory,
+  restrictStorageToExtension,
   saveSettings,
 } from '../../extension/lib/storage.js';
 import { buildJsonReport, buildTextReport } from '../../extension/lib/report.js';
@@ -32,6 +33,22 @@ test('settings default sensibly and round-trip through storage', async () => {
   assert.equal(isProviderEnabled(s, 'tor'), false);
   assert.equal(isProviderEnabled(s, 'otx'), true);
   assert.deepEqual(normalizeSettings(null).keys, {});
+});
+
+test('storage is restricted to trusted contexts where the browser supports it', async () => {
+  const calls = [];
+  const supported = createMemoryArea();
+  supported.setAccessLevel = async (options) => calls.push(options);
+  assert.equal(await restrictStorageToExtension(supported), true);
+  assert.deepEqual(calls, [{ accessLevel: 'TRUSTED_CONTEXTS' }]);
+
+  assert.equal(await restrictStorageToExtension(createMemoryArea()), false, 'older browsers without the API');
+
+  const refusing = createMemoryArea();
+  refusing.setAccessLevel = async () => {
+    throw new Error('This StorageArea does not support setting the access level');
+  };
+  assert.equal(await restrictStorageToExtension(refusing), false, 'a refusal is not fatal');
 });
 
 /* ------------------------------------------------------------- history */
