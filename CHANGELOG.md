@@ -4,7 +4,9 @@ Notable changes to ipScout are documented here. The format follows [Keep a Chang
 
 ## [Unreleased]
 
-The first public release, planned as 1.0.0.
+## [1.0.0] - 2026-10-03
+
+The first public release.
 
 ### Added
 
@@ -18,3 +20,6 @@ The first public release, planned as 1.0.0.
 ### Security
 
 - Extension storage, which holds the API keys, is restricted to ipScout's own pages, so scripts running on websites can't read it ([#2](https://github.com/Velidoran/ipscout-extension/pull/2)).
+
+[Unreleased]: https://github.com/Velidoran/ipscout-extension/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/Velidoran/ipscout-extension/releases/tag/v1.0.0
