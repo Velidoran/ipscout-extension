@@ -1067,6 +1067,11 @@ body.options main {
 .privacy li {
   margin: 4px 0;
 }
+.about {
+  margin-top: 28px;
+  color: var(--faint);
+  font-size: 12px;
+}
 
 .toast {
   position: fixed;

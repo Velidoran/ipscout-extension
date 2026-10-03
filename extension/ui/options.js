@@ -156,6 +156,11 @@ for (const id of ['abuseipdbFetchReports', 'autoLookupSelection', 'scanPage', 'd
   });
 }
 
+/* -------------------------------------------------------------- about */
+
+const { version, homepage_url: homepage } = chrome.runtime.getManifest();
+$('about').append(`ipScout ${version} · `, extLink(homepage, 'Source code and issue tracker on GitHub'), ' · MIT License');
+
 /* --------------------------------------------------------------- data */
 
 $('clear-cache').addEventListener('click', async () => {

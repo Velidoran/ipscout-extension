@@ -3,15 +3,42 @@
   "version": "1.0.0",
   "private": true,
   "description": "Chrome extension for quick IP address research using free threat-intel and network APIs.",
-  "type": "module",
+  "keywords": [
+    "chrome-extension",
+    "manifest-v3",
+    "ip-lookup",
+    "threat-intelligence",
+    "osint",
+    "abuseipdb",
+    "virustotal",
+    "shodan",
+    "greynoise"
+  ],
+  "homepage": "https://github.com/Velidoran/ipscout-extension#readme",
+  "bugs": {
+    "url": "https://github.com/Velidoran/ipscout-extension/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Velidoran/ipscout-extension.git"
+  },
   "license": "MIT",
+  "author": "Velidoran",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "test": "node --test \"tests/unit/*.test.js\"",
     "test:e2e": "node --test \"tests/e2e/*.test.js\"",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "icons": "node scripts/build-icons.mjs",
+    "screenshots": "node scripts/screenshots.mjs",
     "package": "node scripts/package.mjs"
   },
   "devDependencies": {
-    "playwright": "1.56.1"
+    "playwright": "1.56.1",
+    "prettier": "3.8.1"
   }
 }

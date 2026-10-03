@@ -1,0 +1,28 @@
+name: Feature request or new source
+description: Suggest an improvement, or another IP research site to add
+labels: [enhancement]
+body:
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What kind of request is this?
+      options:
+        - New data source
+        - New feature
+        - Improvement to an existing feature
+    validations:
+      required: true
+
+  - type: textarea
+    id: idea
+    attributes:
+      label: Describe your idea
+      description: What would it help you find out, or what problem would it solve?
+    validations:
+      required: true
+
+  - type: textarea
+    id: source
+    attributes:
+      label: Source details (new sources only)
+      description: A link to the site and its API docs, whether the free tier needs a key, its limits, and any terms that restrict use (for example non-commercial only).

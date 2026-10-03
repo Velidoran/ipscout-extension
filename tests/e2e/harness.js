@@ -47,7 +47,7 @@ export async function launchExtension({ deviceScaleFactor = 1, extraHostPermissi
         return route.fulfill({ contentType: 'text/html', body: '<!doctype html><title>Test page</title><p>Seen from 8.8.8.8</p>' });
       }
       requests.push({ url: request.url(), method: request.method(), headers: request.headers() });
-      const res = mockResponse(request.url(), { method: request.method(), body: request.postData() });
+      const res = mockResponse(request.url(), { body: request.postData() });
       if (!res) return route.fulfill({ status: 599, body: 'blocked by test harness' });
       return route.fulfill({ status: res.status, contentType: 'application/json', body: JSON.stringify(res.body) });
     },

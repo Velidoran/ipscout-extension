@@ -1,31 +1,63 @@
-# ipScout
-
-A Chrome extension for quick IP address research. Paste, select or right-click an IP and ipScout checks **11 free sources at once** — abuse reports, threat intel, open ports, geolocation, WHOIS, reverse DNS and Tor/VPN detection — and rolls them up into one verdict.
-
-**8 sources work with no setup.** Three more (AbuseIPDB, VirusTotal, ThreatFox) need a free API key that takes a minute to create.
-
 <p align="center">
-  <img src="docs/popup.png" width="380" alt="ipScout popup showing a flagged IP with a Malicious verdict, traits and per-source results">
+  <img src="extension/icons/icon128.png" width="96" height="96" alt="ipScout logo">
 </p>
 
-![Full report for 8.8.8.8 with location, network, hostname, abuse contact and per-source cards](docs/report.png)
+<h1 align="center">ipScout</h1>
 
-<sub>Screenshots use mocked API responses. 1.2.3.4 is the usual placeholder address and its "malicious" data is made up.</sub>
+<p align="center">
+  <strong>Research any IP address in one click, right from Chrome.</strong><br>
+  Abuse reports, threat intel, open ports, geolocation, WHOIS, reverse DNS and Tor/VPN checks from 11 free sources, rolled up into one verdict.
+</p>
+
+<p align="center">
+  <a href="https://github.com/Velidoran/ipscout-extension/actions/workflows/ci.yml"><img src="https://github.com/Velidoran/ipscout-extension/actions/workflows/ci.yml/badge.svg" alt="CI status"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/Velidoran/ipscout-extension" alt="MIT license"></a>
+  <img src="https://img.shields.io/badge/Chrome-Manifest%20V3-4285F4?logo=googlechrome&logoColor=white" alt="Chrome Manifest V3">
+  <img src="https://img.shields.io/badge/runtime%20dependencies-none-brightgreen" alt="No runtime dependencies">
+</p>
+
+<p align="center">
+  <a href="#install">Install</a> ·
+  <a href="#using-ipscout">Usage</a> ·
+  <a href="#sources">Sources</a> ·
+  <a href="#how-the-verdict-works">Verdicts</a> ·
+  <a href="#privacy-and-permissions">Privacy</a> ·
+  <a href="CONTRIBUTING.md">Contributing</a>
+</p>
+
+<p align="center">
+  <img src="docs/hero.png" width="900" alt="The full ipScout report for 8.8.8.8, with the popup showing a flagged IP on top">
+</p>
+<p align="center"><sub>Screenshots use mocked API data. 1.2.3.4 is the usual placeholder address; its "malicious" result is made up.</sub></p>
 
 ## Features
 
-- **One verdict from many sources.** Malicious / Suspicious / No threats reported, with the sources that flagged it, plus traits like _Tor exit_, _VPN_, _Hosting_, _Internet scanner_ or _Known benign service_.
-- **Key facts up front:** location, ASN and owner, network range, reverse DNS (forward-confirmed), and the abuse contact to report to.
-- **Many ways in:**
-  - Toolbar popup (default shortcut <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>S</kbd>). If you've highlighted an IP on the page, it's checked right away; otherwise the popup lists IPs found on the page.
-  - Right-click selected text → **Scout “…” with ipScout**, or right-click a link → **Scout this link’s host**.
-  - Address bar: type `ip`, a space, then the address.
-  - Full-page report you can bookmark or share: `results.html?q=<ip>`.
-- **Paste anything:** IPv4 or IPv6, `ip:port`, URLs, hostnames (resolved via DNS-over-HTTPS), whole log lines, and defanged IOCs like `1.2.3[.]4` or `hxxps://evil[.]com`.
-- **Safe by default:** private and reserved addresses (RFC 1918, CGNAT, loopback, documentation ranges, …) are recognised and never sent anywhere.
-- **Built for analysts:** copy a plain-text summary (optionally defanged) or full JSON for tickets, view each source's raw API response, and jump to each site's own page for the IP.
-- **Saves your free quota:** results are cached (6 hours by default, configurable), and Refresh fetches fresh data on demand.
-- One-click links to sites without a free API: Cisco Talos, Censys, Spur, IBM X-Force, urlscan.io, Criminal IP, Scamalytics and Hurricane Electric BGP.
+- **One verdict from 11 sources.** Malicious, Suspicious or No threats reported, naming the sources behind it, plus traits such as _Tor exit_, _VPN_, _Hosting_, _Internet scanner_ or _Known benign service_.
+- **Works out of the box.** 8 sources need no setup. AbuseIPDB, VirusTotal and ThreatFox each need a free API key that takes a minute to create.
+- **Key facts up front:** location, ASN and owner, network range, reverse DNS (forward-confirmed) and the abuse contact to report to.
+- **Paste anything:** IPv4 or IPv6, `ip:port`, URLs, hostnames (resolved over DNS-over-HTTPS), whole log lines and defanged IOCs like `1.2.3[.]4` or `hxxps://evil[.]com`.
+- **Private by design:** there's no ipScout server, and private or reserved addresses (RFC 1918, CGNAT, loopback, documentation ranges, …) are never sent anywhere.
+- **Built for analysts:** copy a plain-text summary (optionally defanged) or JSON for tickets, inspect each source's raw API response, and jump to each site's own page for the IP.
+- **Easy on free quotas:** results are cached (6 hours by default), and Refresh fetches fresh data when you need it.
+
+## Install
+
+ipScout isn't in the Chrome Web Store yet, so you load it as an unpacked extension:
+
+1. Download `ipscout-<version>.zip` from the [latest release](https://github.com/Velidoran/ipscout-extension/releases/latest) and unzip it, or clone this repository.
+2. Open `chrome://extensions` and switch on **Developer mode** (top right).
+3. Click **Load unpacked** and select the unzipped folder (or the repository's `extension` folder).
+4. Pin ipScout from the puzzle-piece menu so the icon stays in your toolbar.
+
+The settings page opens on first install so you can add API keys. Other Chromium-based browsers (Edge, Brave, …) should also be able to load it from their own extensions page, though only Chrome/Chromium is tested.
+
+## Using ipScout
+
+- **Toolbar popup:** click the icon or press <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>S</kbd>. If you've highlighted an IP on the page it's checked straight away; otherwise the popup lists the IPs found on the page and your recent lookups.
+- **Right-click:** select an IP (or a whole log line) and choose **Scout “…” with ipScout**, or right-click a link and choose **Scout this link’s host**.
+- **Address bar:** type `ip`, a space, then the address.
+- **Full report:** open any lookup in a tab for the complete report. Its address (`results.html?q=<ip>`) can be bookmarked.
+- **More sites:** each report links to sites without a free API: Cisco Talos, Censys, Spur, IBM X-Force, urlscan.io, Criminal IP, Scamalytics and Hurricane Electric BGP.
 
 ## Sources
 
@@ -43,18 +75,7 @@ A Chrome extension for quick IP address research. Paste, select or right-click a
 | Reverse DNS                                             | PTR record, forward-confirmed (FCrDNS)                            | None         | Free (Google / Cloudflare DNS-over-HTTPS) |
 | [Tor Project](https://metrics.torproject.org) (Onionoo) | Is it a Tor relay or exit node?                                   | None         | Free                                      |
 
-GreyNoise and Shodan InternetDB are IPv4-only; everything else handles IPv6 too.
-
-## Install
-
-ipScout isn't on the Chrome Web Store yet, so load it unpacked:
-
-1. Download or clone this repository.
-2. Open `chrome://extensions` and switch on **Developer mode** (top right).
-3. Click **Load unpacked** and choose the **`extension`** folder.
-4. Pin ipScout from the puzzle-piece menu so the icon stays in your toolbar.
-
-The settings page opens on first install. Other Chromium-based browsers (Edge, Brave, …) should also be able to load it from their own extensions page, though only Chrome/Chromium is tested.
+GreyNoise and Shodan InternetDB are IPv4-only; everything else handles IPv6 too. Each source's free tier has its own terms, and several, including the VirusTotal public API and Shodan InternetDB, are for non-commercial use only.
 
 ### Getting the free API keys
 
@@ -67,7 +88,11 @@ The settings page opens on first install. Other Chromium-based browsers (Edge, B
 | OTX        | [otx.alienvault.com/api](https://otx.alienvault.com/api)                     | Optional                                                         |
 | IPinfo     | [ipinfo.io/signup](https://ipinfo.io/signup)                                 | Optional; raises the limit to 50,000/month                       |
 
-Paste keys into **ipScout → Settings** (the sliders icon in the popup). They save automatically.
+Paste keys into ipScout's settings (the sliders icon in the popup). They save automatically, and every source can be switched off there.
+
+<p align="center">
+  <img src="docs/options.png" width="640" alt="ipScout settings page listing each source with its key status and free tier">
+</p>
 
 ## How the verdict works
 
@@ -99,13 +124,22 @@ ipScout has no server. Lookups go straight from your browser to each source you 
 - API keys are stored in `chrome.storage.local` and sent only to the service they belong to, in request headers where the API allows it (ipapi.is only accepts its key in the URL).
 - That storage is restricted to ipScout's own pages, so scripts running on websites, including the popup's page scan, can't read your keys. Chrome doesn't encrypt extension storage on disk, so anyone with access to your browser profile folder could still read them; you can revoke and regenerate a key on its site at any time.
 - Requests never include your cookies for these sites, so lookups aren't tied to your logged-in accounts there.
-- You can switch off page scanning, auto-lookup and any individual source in Settings, and clear the cache and history at any time.
-
-Each source's free tier has its own terms. Several, including the VirusTotal public API and Shodan InternetDB, are for non-commercial use only.
+- You can switch off page scanning, auto-lookup and any individual source in the settings, and clear the cache and history at any time.
 
 ## Development
 
-No build step: the extension is plain JavaScript modules in `extension/`.
+There's no build step: the extension is plain JavaScript modules in [`extension/`](extension) with no runtime dependencies.
+
+```sh
+npm install                       # dev tools: Playwright and Prettier
+npm test                          # unit tests
+npx playwright install chromium   # once, for the end-to-end tests
+npm run test:e2e                  # the real extension in Chromium, with every API mocked
+npm run package                   # dist/ipscout-<version>.zip
+```
+
+<details>
+<summary>Project layout</summary>
 
 ```
 extension/
@@ -121,30 +155,18 @@ extension/
     http.js dns.js storage.js report.js format.js quicklinks.js
   ui/                  Rendering, controllers, styles (light and dark)
 tests/
-  unit/                Node test runner, no dependencies
-  e2e/                 The real extension in Chromium via Playwright, all APIs mocked
+  unit/                Node's built-in test runner
+  e2e/                 The real extension in Chromium via Playwright
   fixtures/            Mock responses in each API's documented format
-scripts/               Icons, screenshots and Web Store packaging
+scripts/               Icons, README images and Web Store packaging
 ```
 
-```sh
-npm test                      # unit tests (Node 22+, no install needed)
-npm install                   # dev dependency: Playwright
-npx playwright install chromium
-npm run test:e2e              # loads the extension in Chromium against mocked APIs
-npm run package               # dist/ipscout-<version>.zip for the Chrome Web Store
-npm run icons                 # re-render PNG icons from extension/icons/*.svg
-node scripts/screenshots.mjs  # regenerate the README screenshots
-```
+</details>
 
-### Adding a source
+## Contributing
 
-Create `extension/lib/providers/<name>.js` exporting an object with `id`, `name`, `category` (`reputation`, `exposure` or `network`), `description`, `homepage`, `webUrl(ip)`, `key` (or `null`), `freeTier`, `ipv6` and `async lookup(ip, ctx)`. `lookup` calls `ctx.fetchJson(url, options)` and returns `{ verdict, summary, fields, tags, lists, flags, facts }` (see `providers/index.js` for the full shape). Then:
-
-1. Register it in `providers/index.js`.
-2. Add the API host to `host_permissions` in `manifest.json`. A unit test fails if you forget.
-3. Add a mock response in `tests/fixtures/responses.js` and tests in `tests/unit/providers.test.js`.
+Bug reports, ideas for new sources and pull requests are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for the development setup, how to add a source and how releases work. Please report security issues privately as described in [SECURITY.md](SECURITY.md), and follow the [code of conduct](CODE_OF_CONDUCT.md).
 
 ## License
 
-[MIT](LICENSE)
+Released under the [MIT License](LICENSE).
