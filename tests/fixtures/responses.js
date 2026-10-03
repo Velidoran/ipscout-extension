@@ -486,7 +486,7 @@ const dnsAAAA = {
  * Resolve a request to a mock response.
  * Returns { status, body, url? } or null when the request isn't covered.
  */
-export function mockResponse(urlString, { method = 'GET', body } = {}) {
+export function mockResponse(urlString, { body } = {}) {
   const url = new URL(urlString);
   const host = url.hostname;
   const lastSegment = decodeURIComponent(url.pathname.split('/').filter(Boolean).pop() || '');
@@ -546,7 +546,7 @@ export function createMockFetch({ override } = {}) {
     const url = String(input);
     calls.push({ url, init });
     const custom = override?.(url, init);
-    const res = custom || mockResponse(url, { method: init.method, body: init.body });
+    const res = custom || mockResponse(url, { body: init.body });
     if (!res) throw new TypeError(`Failed to fetch ${url}`);
     const response = new Response(JSON.stringify(res.body), { status: res.status, headers: { 'content-type': 'application/json' } });
     if (res.url) Object.defineProperty(response, 'url', { value: res.url });

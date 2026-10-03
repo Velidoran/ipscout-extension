@@ -1,6 +1,6 @@
 // Rendering of lookup results. Shared by the popup and the full-page view.
 
-import { append, clear, extLink, h, icon } from './dom.js';
+import { clear, extLink, h, icon } from './dom.js';
 import { CATEGORY_LABELS } from '../lib/providers/index.js';
 import { FLAG_LABELS, FLAG_TONES, summarize, verdictHeadline } from '../lib/lookup.js';
 import { QUICK_LINKS } from '../lib/quicklinks.js';
@@ -620,5 +620,3 @@ export function renderMessage(root, { title, detail, busy = false }) {
     ),
   );
 }
-
-export { append };

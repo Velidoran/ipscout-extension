@@ -3,7 +3,7 @@
 
 import { after, before, beforeEach, test } from 'node:test';
 import assert from 'node:assert/strict';
-import { TEST_PAGE_URL, launchExtension } from './harness.js';
+import { TEST_PAGE_URL, launchExtension, waitFor } from './harness.js';
 
 let ext;
 let pageErrors;
@@ -141,11 +141,17 @@ test('results are cached, and Refresh bypasses the cache', async () => {
   await second.close();
 });
 
-test('switching a source off in Options stops it being queried', async () => {
+test('switching a source off in Options stops it being queried, even if the page is closed right away', async () => {
   const options = await openPage('options.html');
   await options.getByRole('checkbox', { name: 'Use Tor Project' }).uncheck();
-  await options.waitForFunction(async () => (await chrome.storage.local.get('settings')).settings?.enabled?.tor === false);
-  await options.close();
+  await options.close(); // the change must survive closing the page immediately
+
+  const probe = await openPage('options.html');
+  await waitFor(() => probe.evaluate(async () => (await chrome.storage.local.get('settings')).settings?.enabled?.tor === false), {
+    timeout: 3000,
+    message: 'the Tor toggle to be saved',
+  });
+  await probe.close();
 
   const start = ext.requests.length;
   const page = await openPage('results.html?q=8.8.8.8');

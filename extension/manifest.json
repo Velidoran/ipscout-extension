@@ -4,6 +4,7 @@
   "short_name": "ipScout",
   "version": "1.0.0",
   "description": "Research any IP in one click: abuse reports, threat intel, open ports, geolocation, WHOIS, reverse DNS and Tor/VPN checks.",
+  "homepage_url": "https://github.com/Velidoran/ipscout-extension",
   "minimum_chrome_version": "116",
   "icons": {
     "16": "icons/icon16.png",
