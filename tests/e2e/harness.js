@@ -14,6 +14,19 @@ export const EXTENSION_PATH = fileURLToPath(new URL('../../extension/', import.m
 export const TEST_PAGE_URL = 'https://example.test/';
 
 /**
+ * Poll an async check from Node until it returns something truthy.
+ * (Playwright's waitForFunction treats a returned promise as already truthy,
+ * so it can't wait on async extension APIs like chrome.storage.)
+ */
+export async function waitFor(check, { timeout = 10000, interval = 50, message = 'condition' } = {}) {
+  const deadline = Date.now() + timeout;
+  while (!(await check())) {
+    if (Date.now() > deadline) throw new Error(`Timed out waiting for ${message}`);
+    await new Promise((resolve) => setTimeout(resolve, interval));
+  }
+}
+
+/**
  * extraHostPermissions loads a copy of the extension with additional host
  * access, e.g. so a test can inject a content script into TEST_PAGE_URL.
  */
@@ -55,13 +68,11 @@ export async function launchExtension({ deviceScaleFactor = 1, extraHostPermissi
 
   let [worker] = context.serviceWorkers();
   if (!worker) worker = await context.waitForEvent('serviceworker');
-  // The worker can be reported before Chrome has bound its extension APIs,
-  // so poll (each evaluate runs in the worker's current context) until they appear.
-  const deadline = Date.now() + 10000;
-  while (!(await worker.evaluate(() => typeof globalThis.chrome?.storage === 'object'))) {
-    if (Date.now() > deadline) throw new Error('extension APIs never became available in the service worker');
-    await new Promise((resolve) => setTimeout(resolve, 50));
-  }
+  // The worker can be reported before Chrome has bound its extension APIs.
+  // Each evaluate runs in the worker's current context, so poll until they appear.
+  await waitFor(() => worker.evaluate(() => typeof globalThis.chrome?.storage === 'object'), {
+    message: 'extension APIs in the service worker',
+  });
   const extensionId = new URL(worker.url()).host;
 
   return {

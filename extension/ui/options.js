@@ -3,7 +3,7 @@ import { CATEGORY_LABELS, PROVIDERS } from '../lib/providers/index.js';
 import { clearHistory, createCache, getSettings, saveSettings } from '../lib/storage.js';
 
 const $ = (id) => document.getElementById(id);
-let settings = await getSettings();
+const settings = await getSettings();
 
 for (const el of document.querySelectorAll('[data-icon]')) el.prepend(icon(el.dataset.icon, { size: Number(el.dataset.iconSize) || 16 }));
 
@@ -18,13 +18,11 @@ function toast(message) {
   toastTimer = setTimeout(() => el.classList.remove('show'), 1600);
 }
 
-let saveTimer;
-function save({ debounce = 0 } = {}) {
-  clearTimeout(saveTimer);
-  saveTimer = setTimeout(async () => {
-    settings = await saveSettings(settings);
-    toast('Saved');
-  }, debounce);
+// Write on every change, straight away. A deferred write is lost if the page
+// is closed first (e.g. paste a key, close the tab). Each call stores a
+// snapshot of the one `settings` object, and writes apply in call order.
+function save() {
+  saveSettings(settings).then(() => toast('Saved'));
 }
 
 /* ---------------------------------------------------------- providers */
@@ -98,7 +96,7 @@ function providerRow(provider) {
         if (value) settings.keys[provider.id] = value;
         else delete settings.keys[provider.id];
         badgeSlot.replaceChildren(keyBadge(provider));
-        save({ debounce: 500 });
+        save();
       },
     });
     const reveal = h(
