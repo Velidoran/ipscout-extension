@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ipScout</title>
+    <link rel="icon" href="icons/icon32.png" />
+    <link rel="stylesheet" href="ui/styles.css" />
+  </head>
+  <body class="page">
+    <header class="app-header">
+      <a class="brand" href="results.html"><img src="icons/icon32.png" alt="" /> ipScout</a>
+      <form id="search" class="search" role="search" autocomplete="off">
+        <label class="search-field" data-icon="search">
+          <span class="visually-hidden">IP address, hostname or URL</span>
+          <input id="q" name="q" type="text" placeholder="IP, hostname, URL or log line…" spellcheck="false" />
+        </label>
+        <button class="btn btn-primary" type="submit">Scout</button>
+      </form>
+      <div class="header-actions">
+        <button
+          id="open-options"
+          class="icon-btn"
+          type="button"
+          title="Settings and API keys"
+          aria-label="Settings and API keys"
+          data-icon="sliders"
+        ></button>
+      </div>
+    </header>
+    <p id="form-error" class="form-error" role="alert" hidden style="max-width: 1120px; margin: 8px auto 0; padding: 0 24px"></p>
+
+    <main id="content"></main>
+
+    <script type="module" src="ui/app.js"></script>
+  </body>
+</html>
