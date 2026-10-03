@@ -1,0 +1,1 @@
+# ipScout-extension
