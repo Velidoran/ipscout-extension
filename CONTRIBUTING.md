@@ -55,5 +55,8 @@ New sources should have a free tier that works from a browser extension.
 ## Releasing (maintainers)
 
 1. Update `version` in `extension/manifest.json` and `package.json`, and move the changelog's Unreleased entries under the new version.
-2. Merge to `main`, then tag and push: `git tag v1.2.3 && git push origin v1.2.3`.
-3. The release workflow checks that the tag matches the manifest version, builds the zip and publishes a GitHub release with it attached.
+2. Merge to `main`.
+3. Publish the release in either of these ways:
+   - **On GitHub:** go to **Releases → Draft a new release**, type the new tag (e.g. `v1.2.3`) in **Choose a tag**, pick **Create new tag on publish** with `main` as the target, and click **Publish release**.
+   - **From the command line:** `git tag v1.2.3 origin/main && git push origin v1.2.3`.
+4. The release workflow checks that the tag matches the manifest version, builds the zip and attaches it to the release. If you pushed a tag, it creates the release too.

@@ -1,10 +1,20 @@
 name: Release
 
-# Push a tag matching the manifest version (e.g. v1.0.0) to publish a release
-# with the packaged extension attached.
+# Two ways to release; the tag must match the manifest version (e.g. v1.0.0):
+#   - Publish a release from GitHub's Releases page, creating the tag there.
+#   - Or push the tag from the command line.
+# Either way, this builds the extension zip and attaches it to the release.
 on:
+  release:
+    types: [published]
   push:
     tags: ['v*']
+
+# Publishing from the Releases page can fire both events. Run them one at a
+# time, so the second run just re-attaches the same zip.
+concurrency:
+  group: release-${{ github.ref_name }}
+  cancel-in-progress: false
 
 jobs:
   release:
@@ -33,7 +43,15 @@ jobs:
       - name: Build the extension zip
         run: npm run package
 
-      - name: Publish the GitHub release
+      - name: Attach the zip to the GitHub release
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release create "$GITHUB_REF_NAME" dist/ipscout-*.zip --title "ipScout $GITHUB_REF_NAME" --generate-notes --verify-tag
+          GH_REPO: ${{ github.repository }}
+        run: |
+          if gh release view "$GITHUB_REF_NAME" > /dev/null 2>&1; then
+            # Published from the Releases page: add the zip to that release.
+            gh release upload "$GITHUB_REF_NAME" dist/ipscout-*.zip --clobber
+          else
+            # Tag pushed from the command line: create the release.
+            gh release create "$GITHUB_REF_NAME" dist/ipscout-*.zip --title "ipScout $GITHUB_REF_NAME" --generate-notes --verify-tag
+          fi
