@@ -3,7 +3,7 @@
 
 import { after, before, beforeEach, test } from 'node:test';
 import assert from 'node:assert/strict';
-import { launchExtension } from './harness.js';
+import { TEST_PAGE_URL, launchExtension } from './harness.js';
 
 let ext;
 let pageErrors;
@@ -187,4 +187,39 @@ test('popup home lists recent lookups with their verdicts', async () => {
   await settled(popup);
   assert.equal(await popup.locator('.result-ip').textContent(), '8.8.8.8');
   await popup.close();
+});
+
+test('scripts injected into web pages cannot read the stored API keys', async () => {
+  // A copy of the extension that may also script the test page, standing in
+  // for any page where the popup runs its page-scan script.
+  const probe = await launchExtension({ extraHostPermissions: [`${TEST_PAGE_URL}*`] });
+  try {
+    await probe.worker.evaluate(() => chrome.storage.local.set({ settings: { keys: { virustotal: 'secret-key' } } }));
+    const page = await probe.context.newPage();
+    await page.goto(TEST_PAGE_URL);
+
+    const fromPageScript = await probe.worker.evaluate(async (url) => {
+      const [tab] = await chrome.tabs.query({ url: `${url}*` });
+      const [injection] = await chrome.scripting.executeScript({
+        target: { tabId: tab.id },
+        func: async () => {
+          try {
+            return JSON.stringify(await chrome.storage.local.get(null));
+          } catch (err) {
+            return `blocked: ${err.message}`;
+          }
+        },
+      });
+      return injection.result;
+    }, TEST_PAGE_URL);
+    assert.ok(!fromPageScript.includes('secret-key'), `page script read the key: ${fromPageScript}`);
+    assert.equal(fromPageScript, 'blocked: Access to storage is not allowed from this context.');
+
+    // ipScout's own pages and service worker are unaffected.
+    const options = await probe.context.newPage();
+    await options.goto(probe.url('options.html'));
+    assert.equal(await options.evaluate(async () => (await chrome.storage.local.get('settings')).settings.keys.virustotal), 'secret-key');
+  } finally {
+    await probe.close();
+  }
 });

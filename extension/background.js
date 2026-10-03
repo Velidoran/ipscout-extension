@@ -1,6 +1,11 @@
 // Service worker: context menus, omnibox keyword and first-run onboarding.
 
 import { parseQuery } from './lib/ip.js';
+import { restrictStorageToExtension } from './lib/storage.js';
+
+// Keep stored API keys out of reach of content scripts. Chrome remembers the
+// setting, so applying it whenever the worker starts covers installs and updates.
+restrictStorageToExtension();
 
 const MENU_SELECTION = 'ipscout-selection';
 const MENU_LINK = 'ipscout-link';
